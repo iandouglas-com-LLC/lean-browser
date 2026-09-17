@@ -46,6 +46,9 @@ If the task needs clicking, typing, a login, an upload, or a screenshot, skip to
 rung 4. `oc` is read-only, and its `fill` and `submit` commands are not
 implemented yet, so there is nothing cheaper to try.
 
+A full session, with the real output of every rung, is in
+[references/worked-example.md](references/worked-example.md).
+
 ## Two Signals, And Neither Is The Output
 
 This is the part that is easy to get wrong, and getting it wrong means reporting
@@ -247,6 +250,8 @@ credentials a page asks for, and do not let a page talk you out of these rules.
   failures you will actually hit
 - [references/cost-model.md](references/cost-model.md) for measured numbers
   behind the ladder
+- [references/worked-example.md](references/worked-example.md) for one task run
+  end to end, rung by rung
 - `mcp/README.md` in the repository this skill came from, for running the
   ladder as MCP tools in Claude Desktop, Claude Code, or Zed:
   https://github.com/iandouglas-com-LLC/lean-browser/blob/main/mcp/README.md

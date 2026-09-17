@@ -91,11 +91,18 @@ Node 20 or newer. No dependencies, and there is nothing to build.
 ```bash
 # from the repository root
 node --check skills/lean-browser/scripts/lean-fetch.mjs
+node skills/lean-browser/scripts/lean-fetch.mjs --self-test   # offline, no network
 node skills/lean-browser/scripts/lean-fetch.mjs --help
 ./skills/lean-browser/scripts/lean-fetch.sh --check
 ./skills/lean-browser/scripts/lean-fetch.sh https://example.com
 ./skills/lean-browser/scripts/lean-fetch.sh https://crates.io/crates/serde   # full escalation
 ```
+
+`--self-test` covers the parts that decide what happens next: reading oc's
+verdict, unwrapping a search redirect, and rendering blocks. It needs no network,
+so it cannot be flaky, and it should stay green when you touch those functions.
+Anything reaching the network is a manual test, and a rung that starts failing
+there is usually the tool reporting what it cannot read rather than a bug here.
 
 The MCP server is tested by driving it over stdio, which is also the quickest way
 to see it work:
