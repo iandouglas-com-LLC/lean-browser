@@ -1,0 +1,18 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "lean-browser",
+  "description": "Web research for coding agents. Reads with a cheap CLI fetcher first and escalates to a real browser only when a page needs JavaScript.",
+  "owner": {
+    "name": "iandouglas-com-LLC"
+  },
+  "plugins": [
+    {
+      "name": "lean-browser",
+      "description": "Research the web and read pages cheaply, using only-cli/oc for the cheap rungs and vercel-labs/agent-browser for the pages that need JavaScript.",
+      "source": "./",
+      "strict": false,
+      "skills": ["./skills/lean-browser"],
+      "category": "development"
+    }
+  ]
+}
