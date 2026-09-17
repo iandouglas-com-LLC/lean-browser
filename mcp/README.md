@@ -9,8 +9,8 @@ container, not on your machine, so the browser rungs have no Chrome to drive.
 This server runs on your machine, so the whole ladder works.
 
 It also means one implementation. Every tool here drives
-`scripts/lean-fetch.mjs`, which is the tested code path, so the MCP route and
-the command line cannot drift apart.
+`skills/lean-browser/scripts/lean-fetch.mjs`, which is the tested code path, so
+the MCP route and the command line cannot drift apart.
 
 ## The Tools
 

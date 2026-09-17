@@ -5,9 +5,9 @@
 // directly. This is the path for Claude Desktop and anything else that speaks
 // MCP, and it runs on your machine, so the browser rungs can reach your Chrome.
 //
-// Every tool drives scripts/lean-fetch.mjs rather than reimplementing the
-// ladder, so the MCP path and the command line path cannot drift apart. The CLI
-// is the tested thing; this file is plumbing.
+// Every tool drives skills/lean-browser/scripts/lean-fetch.mjs rather than
+// reimplementing the ladder, so the MCP path and the command line path cannot
+// drift apart. The CLI is the tested thing; this file is plumbing.
 //
 // No dependencies. Node 20 or newer. Nothing but JSON-RPC goes to stdout.
 
@@ -17,7 +17,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const CLI = join(HERE, "..", "scripts", "lean-fetch.mjs");
+const CLI = join(HERE, "..", "skills", "lean-browser", "scripts", "lean-fetch.mjs");
 
 // Echo the client's version when it names one, since the host knows what it
 // speaks better than we do.
