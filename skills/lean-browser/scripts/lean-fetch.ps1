@@ -7,7 +7,7 @@
 # over.
 #
 #   ./scripts/lean-fetch.ps1 https://example.com
-#   ./scripts/lean-fetch.ps1 wiki article "Eiffel Tower" --budget 300
+#   ./scripts/lean-fetch.ps1 wiki article "Eiffel Tower" --budget 2000
 #   ./scripts/lean-fetch.ps1 --check
 #
 # If PowerShell mangles an argument that starts with --, call the shared entry

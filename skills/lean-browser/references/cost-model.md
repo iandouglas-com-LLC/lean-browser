@@ -37,8 +37,8 @@ real pages:
 | Raw HTML fetch | 1,119,003 |
 
 That is 118 times fewer tokens than raw HTML on the fourteen pages both tools
-could read, and the budget keeps a heavy page near 500 tokens: YouTube's watch
-page is 363,516 tokens of raw HTML and 688 through `oc`.
+could read, and the budget keeps a heavy page in the hundreds of tokens:
+YouTube's watch page is 363,516 tokens of raw HTML and 688 through `oc`.
 
 Their whole task benchmarks are closer together than the per page numbers, and
 worth knowing before you expect the ladder to cut your bill by a hundred times.
@@ -55,5 +55,5 @@ of magnitude, because the agent's own prompt dominates the total.
   and only reach for `raw` when you genuinely need the whole page.
 - A page you never fetch is free. If a snippet already answered the question,
   write the answer down and move on.
-- The budget is a target, not a cap, so a page slightly over 500 tokens prints
+- The budget is a target, not a cap, so a page slightly over the budget prints
   whole. Setting `--budget` very low costs you a second call, which is worse.

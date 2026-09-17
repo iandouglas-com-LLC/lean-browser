@@ -18,7 +18,7 @@
 import { spawnSync } from "node:child_process";
 
 const OC_VERSION = process.env.LEAN_OC_VERSION || "0.5.4";
-const DEFAULT_BUDGET = 500;
+const DEFAULT_BUDGET = 1000;
 const DEFAULT_MAX_CHARS = 20000;
 const DEFAULT_SESSION = "lean-browser";
 
@@ -331,7 +331,7 @@ for (let i = 0; i < argv.length; i += 1) {
         "only when the page proves it needs one.",
         "",
         "options:",
-        "  --budget <tokens>    render target for the cheap rungs (default 500)",
+        "  --budget <tokens>    render target for the cheap rungs (default 1000)",
         "  --find <query>       run `oc find` on the page in hand after reading it",
         "  --max-chars <n>      cap browser output in characters (default 20000)",
         "  --links              return the element tree with link URLs instead of page text",

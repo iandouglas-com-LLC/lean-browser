@@ -79,7 +79,7 @@ oc bing search "your query" --budget 1200
 
 The budget ran out before the results did. Result pages carry a lot of chrome
 above the first result; on Bing the results do not start until around block 15.
-Use `--budget 800` for DuckDuckGo and `--budget 1200` for Bing.
+The default of 1000 covers DuckDuckGo; Bing needs `--budget 1200`.
 
 **Symptom:** every result href points at the search engine.
 
