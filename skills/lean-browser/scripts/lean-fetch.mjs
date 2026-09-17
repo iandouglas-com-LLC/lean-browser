@@ -32,6 +32,85 @@ function log(msg) {
   process.stderr.write(`lean-fetch: ${msg}\n`);
 }
 
+// Offline checks for the parts that decide what happens next: reading oc's
+// verdict, unwrapping a search redirect, and rendering blocks. No network, so
+// this runs anywhere and can never be flaky.
+function selfTest() {
+  let passed = 0;
+  const failures = [];
+
+  const check = (label, actual, expected) => {
+    if (actual === expected) {
+      passed += 1;
+    } else {
+      failures.push(`${label}\n      expected: ${JSON.stringify(expected)}\n      actual:   ${JSON.stringify(actual)}`);
+    }
+  };
+
+  // oc's verdict comes from a field, not from stdout.
+  const readable = parseOcJson(
+    '{"url":"https://example.com","title":"Example Domain","blocks":[{"type":"heading","level":1,"text":"Example Domain"}],"empty":false}',
+  );
+  check("parses a readable page", readable && readable.empty, false);
+  check("reads the title", readable && readable.title, "Example Domain");
+
+  const unreadable = parseOcJson(
+    '{"url":"https://crates.io/crates/serde","title":"crates.io","blocks":[],"empty":true}',
+  );
+  check("spots the empty verdict", unreadable && unreadable.empty, true);
+  check("empty page reports no blocks", (unreadable.blocks || []).length, 0);
+
+  check("ignores a line that is not JSON", parseOcJson("oc: no readable content"), null);
+  check("tolerates empty output", parseOcJson(""), null);
+
+  // Search results arrive wrapped in the engine's redirect.
+  const ddg =
+    "//duckduckgo.com/l/?uddg=https%3A%2F%2Fdocs.rs%2Fserde%2Flatest%2Fserde%2F&rut=c1672e0";
+  check("unwraps a duckduckgo redirect", unwrapRedirect(ddg), "https://docs.rs/serde/latest/serde/");
+
+  const b64url = (s) => Buffer.from(s, "utf8").toString("base64").replace(/\+/g, "-").replace(/\//g, "_");
+  const bingExternal = `https://www.bing.com/ck/a?!&&p=abc&u=a1${b64url("https://example.com/page")}&ntb=1`;
+  check("unwraps a bing redirect", unwrapRedirect(bingExternal), "https://example.com/page");
+
+  // Bing also wraps internal links, which decode to a relative path. Those stay
+  // as they arrived, because a relative path is not a citation.
+  const bingInternal = `https://www.bing.com/ck/a?!&&u=a1${b64url("/images/search?q=x")}&ntb=1`;
+  check("leaves a relative bing target alone", unwrapRedirect(bingInternal), bingInternal);
+  check("leaves an ordinary url alone", unwrapRedirect("https://example.com/"), "https://example.com/");
+  check("survives an empty href", unwrapRedirect(""), "");
+  check("survives no href at all", unwrapRedirect(undefined), undefined);
+
+  // Rendering is what the model actually sees.
+  check(
+    "renders headings by level",
+    renderBlocks({ blocks: [{ type: "heading", level: 2, text: "Install" }] }),
+    "## Install",
+  );
+  check(
+    "renders a link with its href",
+    renderBlocks({ blocks: [{ type: "link", n: 4, text: "docs", href: "https://example.com/d" }] }),
+    "[4] docs -> https://example.com/d",
+  );
+  check(
+    "renders plain text",
+    renderBlocks({ blocks: [{ type: "text", text: "hello" }] }),
+    "hello",
+  );
+  check(
+    "renders an unknown block type by its text",
+    renderBlocks({ blocks: [{ type: "input", n: 9, text: "Search" }] }),
+    "[9] Search",
+  );
+  check("renders an empty page as nothing", renderBlocks({}), "");
+
+  process.stdout.write(`lean-fetch self-test: ${passed} passed, ${failures.length} failed\n`);
+  if (failures.length) {
+    process.stdout.write(`${failures.join("\n")}\n`);
+    process.exit(1);
+  }
+  process.exit(0);
+}
+
 function fail(msg, code) {
   process.stderr.write(`lean-fetch: ${msg}\n`);
   process.exit(code);
@@ -234,6 +313,7 @@ const positional = [];
 for (let i = 0; i < argv.length; i += 1) {
   const arg = argv[i];
   if (arg === "--check") check = true;
+  else if (arg === "--self-test") selfTest();
   else if (arg === "--keep-open") keepOpen = true;
   else if (arg === "--links") wantLinks = true;
   else if (arg === "--no-browser") allowBrowser = false;
@@ -259,6 +339,7 @@ for (let i = 0; i < argv.length; i += 1) {
         "  --no-browser         stop after the no-browser rungs",
         "  --keep-open          leave the browser running after rung 4",
         "  --check              report which tools are installed, then exit",
+        "  --self-test          run offline checks on the decision logic, then exit",
         "",
       ].join("\n"),
     );
