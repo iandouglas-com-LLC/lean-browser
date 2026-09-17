@@ -73,6 +73,28 @@ function parseOcJson(stdout) {
   }
 }
 
+// Search results come back wrapped in the engine's own redirect, which is
+// useless to cite. Unwrap the two shapes worth knowing, and leave anything
+// unfamiliar exactly as it arrived.
+function unwrapRedirect(href) {
+  if (!href) return href;
+  try {
+    const ddg = href.match(/[?&]uddg=([^&]+)/);
+    if (ddg && /duckduckgo\.com/.test(href)) {
+      return decodeURIComponent(ddg[1]);
+    }
+    const bing = href.match(/[?&]u=a1([A-Za-z0-9_-]+)/);
+    if (bing && /bing\.com/.test(href)) {
+      const b64 = bing[1].replace(/-/g, "+").replace(/_/g, "/");
+      const decoded = Buffer.from(b64, "base64").toString("utf8");
+      if (/^https?:\/\//i.test(decoded)) return decoded;
+    }
+  } catch {
+    /* fall through and keep the original */
+  }
+  return href;
+}
+
 function renderBlocks(page) {
   const lines = [];
   for (const block of page.blocks || []) {
@@ -82,7 +104,8 @@ function renderBlocks(page) {
       const level = Math.min(Math.max(block.level || 1, 1), 6);
       lines.push(`${"#".repeat(level)} ${text}`.trim());
     } else if (block.type === "link") {
-      lines.push(`${marker}${text}${block.href ? ` -> ${block.href}` : ""}`.trim());
+      const href = unwrapRedirect(block.href);
+      lines.push(`${marker}${text}${href ? ` -> ${href}` : ""}`.trim());
     } else if (text) {
       lines.push(`${marker}${text}`.trim());
     }
@@ -284,11 +307,13 @@ if (result.ok) {
     const found = oc(["find", findQuery, "--session", SESSION]);
     if (found.status === 0 && found.stdout.trim()) {
       log(`oc find: ${findQuery}`);
+      log("read via rung 1");
       process.stdout.write(`${found.stdout.trim()}\n`);
       process.exit(0);
     }
     log("oc find came back empty, printing the page instead");
   }
+  log("read via rung 1");
   process.stdout.write(`${result.content}\n`);
   process.exit(0);
 }
@@ -303,6 +328,7 @@ if (!url) {
 log("rung 2: oc raw");
 result = tryOcRung("rung 2", ["raw", url]);
 if (result.ok) {
+  log("read via rung 2");
   process.stdout.write(`${result.content}\n`);
   process.exit(0);
 }
@@ -315,6 +341,7 @@ if (!allowBrowser) {
 log("rung 3: agent-browser read");
 result = tryAgentBrowserRead(url);
 if (result.ok) {
+  log("read via rung 3");
   process.stdout.write(`${result.content}\n`);
   process.exit(0);
 }
@@ -323,6 +350,7 @@ if (result.ok) {
 log("rung 4: agent-browser open + read");
 result = tryAgentBrowserPage(url, maxChars, keepOpen, wantLinks);
 if (result.ok) {
+  log("read via rung 4");
   process.stdout.write(`${result.content}\n`);
   process.exit(0);
 }
