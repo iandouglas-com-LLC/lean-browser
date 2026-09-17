@@ -30,6 +30,7 @@ directions, and that is the whole reason this skill exists.
 - [Install The Two CLIs](#install-the-two-clis)
 - [Install The Skill](#install-the-skill)
 - [Test It](#test-it)
+- [The Wrapper Script](#the-wrapper-script)
 - [What Each Rung Costs](#what-each-rung-costs)
 - [Trade-offs](#trade-offs)
 - [Reference and Further Reading](#reference-and-further-reading)
@@ -134,8 +135,8 @@ oc open https://example.com
 
 No install also works: `npx --yes @only-cli/oc@0.5.4 open <url>` runs it
 directly. The skill and the wrapper scripts use that pinned form by default,
-which is deliberate. See [Troubleshooting](references/troubleshooting.md) for
-why.
+which is deliberate. See
+[Troubleshooting](skills/lean-browser/references/troubleshooting.md) for why.
 
 **agent-browser**, for rungs 3 and 4. This one downloads Chrome the first time.
 
@@ -307,6 +308,26 @@ Look up the current recommended way to configure HTTP proxies in Go and cite
 the official page.
 ```
 
+## The Wrapper Script
+
+`skills/lean-browser/scripts/lean-fetch.sh` runs the whole ladder in a single
+call and tells you which rung produced the result. It lives inside the skill
+folder, so it arrives with any of the install paths above.
+
+```bash
+./skills/lean-browser/scripts/lean-fetch.sh https://example.com
+./skills/lean-browser/scripts/lean-fetch.sh wiki article Eiffel Tower --budget 300
+./skills/lean-browser/scripts/lean-fetch.sh https://crates.io/crates/serde --links
+./skills/lean-browser/scripts/lean-fetch.sh --check
+```
+
+Content goes to stdout and the rung log goes to stderr, so you can capture just
+the page. On Windows use `scripts/lean-fetch.ps1`, or the `.sh` under Git Bash.
+
+The ladder itself lives in `lean-fetch.mjs`, with thin bash and PowerShell entry
+points around it, so macOS, Linux, and Windows cannot drift apart. Node 20 or
+newer, which `oc` needs anyway.
+
 ## What Each Rung Costs
 
 Order of magnitude, per page, measured while building this and consistent with
@@ -351,12 +372,18 @@ They idle out after an hour, but if you are scripting this, call
 
 ## Reference and Further Reading
 
-- [references/oc-cheatsheet.md](references/oc-cheatsheet.md) for the oc command
-  surface, shortcuts, exit codes, and sessions
-- [references/agent-browser-fallback.md](references/agent-browser-fallback.md)
+- [references/oc-cheatsheet.md](skills/lean-browser/references/oc-cheatsheet.md)
+  for the oc command surface, shortcuts, exit codes, and sessions
+- [references/agent-browser-fallback.md](skills/lean-browser/references/agent-browser-fallback.md)
   for the browser rungs, output limits, and cleanup
-- [references/troubleshooting.md](references/troubleshooting.md) for the
-  collisions and warnings you will actually hit
+- [references/troubleshooting.md](skills/lean-browser/references/troubleshooting.md)
+  for the collisions and warnings you will actually hit
+- [references/cost-model.md](skills/lean-browser/references/cost-model.md) for
+  the measured numbers behind the ladder
+- [AGENTS.md](AGENTS.md), a block to paste into another agent's instructions
+  file when it has no skill system of its own
+- [mcp/README.md](mcp/README.md), for running the ladder as MCP tools in Claude
+  Desktop, Claude Code, or Zed
 - [only-cli/oc](https://github.com/only-cli/oc) and its
   [benchmarks](https://github.com/only-cli/benchmarks)
 - [vercel-labs/agent-browser](https://github.com/vercel-labs/agent-browser) and
