@@ -32,7 +32,7 @@ prefer it: it runs the whole ladder and reports which rung produced the result.
 | 1 | `oc <site> <verb> ...` for a known site, else `oc open <url>` | exit code is 2 |
 | 2 | `oc raw <url>` | output is a title with no body |
 | 3 | `agent-browser read <url>` | `data.content` is empty |
-| 4 | `agent-browser open <url>`, then `agent-browser snapshot -i -c --urls` | you have the content |
+| 4 | `agent-browser open <url>`, then `agent-browser read` | you have the content |
 
 Stop as soon as a rung gives you what you need. Rung 1 answers most questions.
 Do not run rungs you do not need, and do not run all four "to be safe".
@@ -138,18 +138,33 @@ Useful flags:
 free, but it is still a plain HTTP fetch and will not rescue a JavaScript page.
 Use it as a cheap second opinion before paying for a browser.
 
-Rung 4 launches Chrome and keeps a daemon alive between calls:
+Rung 4 launches Chrome and keeps a daemon alive between calls. Read the
+**rendered page** rather than the element tree, because you want prose:
 
 ```
 agent-browser open <url>
-agent-browser snapshot -i -c --urls       interactive elements, compact, with link URLs
-agent-browser get text @e14               text of one element
-agent-browser snapshot -i -c -d 3 -s "#main"   scope and limit depth when output runs long
+agent-browser wait --load load        do not skip this
+agent-browser read                    the rendered active tab, as text
 ```
 
-Keep rung 4 output small. `--max-output <chars>` caps it in characters,
-`-i -c -d <n>` trims the tree, and `snapshot --delta` returns only what changed
-on repeat visits. See [references/agent-browser-fallback.md](../references/agent-browser-fallback.md)
+The wait is not optional. With a warm daemon `open` returns before a
+client-rendered page has drawn anything, and a read straight after it comes back
+empty. Cold starts hide the problem, which is what makes it worth doing every
+time. If the read is still empty, wait briefly and read again.
+
+When you need the URL behind a link rather than the page text, take the element
+tree instead. It costs about twice as much and carries no prose:
+
+```
+agent-browser snapshot -i -c --urls        interactive elements with link URLs
+agent-browser get text @e14                text of one element
+agent-browser snapshot -i -c -d 3 -s "#main"   scope and limit depth
+```
+
+Keep rung 4 output small. `--max-output <chars>` caps it in characters, `-i -c
+-d <n>` trims the tree, and `snapshot --delta` returns only what changed on
+repeat visits. See
+[references/agent-browser-fallback.md](../references/agent-browser-fallback.md)
 for the full set.
 
 ## Pages Behind A Login
