@@ -69,13 +69,15 @@ This is the whole skill, and everything else here is supporting detail.
 | 1 | `oc <shortcut>` for a known site, else `oc open <url>` | Exit code 2 |
 | 2 | `oc raw <url>` | Still only a title, no body |
 | 3 | `agent-browser read <url>` (does not launch Chrome) | `content` comes back empty |
-| 4 | `agent-browser open <url>` then `snapshot -i -c --urls` | Working |
+| 4 | `agent-browser open <url>` then `agent-browser read` | Working |
 
 Rungs 1 and 2 cost a few hundred tokens. Rung 3 launches no browser but still
 does a plain HTTP fetch, so it does not rescue JavaScript-only pages; it is
 there because it occasionally reads the markdown a site publishes alongside the
 page. Rung 4 is the real browser, and it is the only rung that reads content
-JavaScript produces.
+JavaScript produces. Read the rendered page there rather than the element tree,
+and wait for the load event first, or a warm browser will hand you an empty
+page.
 
 One rule that saves more than any rung: **do not refetch what a citation already
 answered.** If a search result snippet carries the fact, write it down and move
@@ -315,7 +317,8 @@ oc's published benchmarks:
 | `oc open` | 40 to 500 tokens | No |
 | `oc raw` | roughly 10x `oc open` | No |
 | `agent-browser read` | one HTTP fetch, no browser launch | No |
-| `agent-browser snapshot -i -c` | roughly 1,000 to 1,500 tokens | Yes |
+| `agent-browser read` on the rendered tab | roughly 700 tokens of prose | Yes |
+| `agent-browser snapshot -i -c --urls` | roughly 1,400 tokens of element tree | Yes |
 
 The spread between the top and bottom rung is the reason to bother. It is also
 the reason not to be clever about it: one wasted browser launch costs more than a
