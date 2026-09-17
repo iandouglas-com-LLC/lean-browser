@@ -1,0 +1,15 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# Local scratch
+tmp/
+*.log
+
+# Anything agent-browser writes while you test the fallback rung
+screenshots/
+*.har
+
+# OS noise
+.DS_Store
+Thumbs.db
