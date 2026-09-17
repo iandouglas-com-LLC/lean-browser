@@ -1,0 +1,12 @@
+# Codex and ChatGPT desktop read this optional file for UI metadata and
+# invocation policy. Codex works without it, using the SKILL.md frontmatter.
+# Reference: https://developers.openai.com/codex/skills
+
+interface:
+  display_name: "Lean Browser"
+  short_description: "Read the web cheaply and escalate to a browser only when a page needs one"
+  default_prompt: "Research this for me with the lean-browser skill, and tell me which tool read each page."
+
+policy:
+  # Matches implicitly on the description, the way the other agent tools do.
+  allow_implicit_invocation: true
