@@ -103,6 +103,43 @@ space them out.
 locally while a proxy is set is refused too, because the proxy would resolve it
 on a network `oc` cannot see. This will not succeed on retry. Report it.
 
+## Bot Challenges
+
+**Symptom:** every rung returns a wall: "Just a moment...", "Performing security
+verification", or a Turnstile checkbox.
+
+That is Cloudflare or a sibling, and it is not a bug in the ladder. `oc` exits 2
+because a transport fingerprint is all it has and the challenge wants
+JavaScript. Rung 4 is a real Chrome and can sometimes run the challenge, but
+upstream issue 506 reports that stealth plugins, headed mode, custom headers,
+and automation launch flags all fail against advanced Cloudflare.
+
+Before you spend a browser launch, try the site's feed. Stack Overflow challenges
+every question page and answers `/feeds`, and `oc` converts a feed to the same
+readable shape as a page. `oc sites` lists the shortcuts that already know these
+side doors.
+
+If the wall holds, report it as a wall. Do not report the challenge text as the
+article, and do not retry the same URL. More in [gated-pages.md](gated-pages.md).
+
+## Proxies And Logins
+
+**Symptom:** the cheap rungs fail while the browser rung works, or the reverse,
+after you set a proxy.
+
+`oc` reads `HTTPS_PROXY`, `HTTP_PROXY`, and `NO_PROXY`, and refuses anything that
+is not an HTTP or HTTPS proxy, so a `socks5://` value leaves the cheap rungs
+unable to fetch. `agent-browser` reads those same variables, prefers
+`AGENT_BROWSER_PROXY` when it is set, and also accepts `ALL_PROXY` for SOCKS.
+Check both before you conclude the proxy is broken.
+
+**Symptom:** an authenticated page returns a login form or a 403.
+
+The cheap rungs do not share your browser's cookie jar. Seed it with
+`oc login --cookie - --domain example.com`, piping the header in through stdin
+rather than passing it as an argument. The full walkthrough is in
+[gated-pages.md](gated-pages.md).
+
 ## Environment Warnings
 
 **Symptom:** `npm warn EBADENGINE` mentioning Node 20.19 or newer, while

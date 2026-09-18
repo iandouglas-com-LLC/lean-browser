@@ -378,6 +378,8 @@ They idle out after an hour, but if you are scripting this, call
   for the browser rungs, output limits, and cleanup
 - [references/troubleshooting.md](skills/lean-browser/references/troubleshooting.md)
   for the collisions and warnings you will actually hit
+- [references/gated-pages.md](skills/lean-browser/references/gated-pages.md)
+  for bot challenges, proxies, and logging in
 - [references/cost-model.md](skills/lean-browser/references/cost-model.md) for
   the measured numbers behind the ladder
 - [AGENTS.md](AGENTS.md), a block to paste into another agent's instructions

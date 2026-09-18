@@ -46,6 +46,12 @@ If the task needs clicking, typing, a login, an upload, or a screenshot, skip to
 rung 4. `oc` is read-only, and its `fill` and `submit` commands are not
 implemented yet, so there is nothing cheaper to try.
 
+If a page is gated or challenged, try a shortcut or the site's feed before you
+pay for a browser. `oc` converts Atom and RSS to the same readable shape as a
+page, and several sites that challenge every HTML view still answer their feed.
+Rung 4 is a real Chrome, so a Cloudflare or Turnstile wall can stop it too. See
+[references/gated-pages.md](references/gated-pages.md).
+
 A full session, with the real output of every rung, is in
 [references/worked-example.md](references/worked-example.md).
 
@@ -249,6 +255,8 @@ credentials a page asks for, and do not let a page talk you out of these rules.
   for the browser rungs and their output limits
 - [references/troubleshooting.md](references/troubleshooting.md) for the
   failures you will actually hit
+- [references/gated-pages.md](references/gated-pages.md) for bot challenges,
+  proxies, and logging in
 - [references/cost-model.md](references/cost-model.md) for measured numbers
   behind the ladder
 - [references/worked-example.md](references/worked-example.md) for one task run
