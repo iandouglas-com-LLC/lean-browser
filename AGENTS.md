@@ -15,7 +15,7 @@ Copy everything between the rules.
 When you need content from a web page, read it cheaply first and escalate only
 when the page proves it needs a browser. Four rungs, in order:
 
-1. `npx --yes @only-cli/oc@0.5.4 open <url> --budget 500`. If the exit code is
+1. `npx --yes @only-cli/oc@0.5.4 open <url> --budget 1000`. If the exit code is
    `2`, or the JSON carries `"empty": true`, it cannot read that page. Do not
    retry the same URL.
 2. `npx --yes @only-cli/oc@0.5.4 raw <url>` for the page's own markdown.

@@ -335,7 +335,7 @@ oc's published benchmarks:
 
 | Rung | Cost | Reads JavaScript |
 | --- | --- | --- |
-| `oc open` | 40 to 500 tokens | No |
+| `oc open` | 40 to 1,000 tokens | No |
 | `oc raw` | roughly 10x `oc open` | No |
 | `agent-browser read` | one HTTP fetch, no browser launch | No |
 | `agent-browser read` on the rendered tab | roughly 700 tokens of prose | Yes |
@@ -350,7 +350,7 @@ dozen `oc` calls.
 **What this is good at.** Research and lookups where you need the content of a
 page: documentation, release notes, issue threads, changelogs, an API reference,
 a fact you need to cite. Broad trigger, cheap failure mode. Worst case it spends
-500 tokens and falls through to the next rung.
+1,000 tokens and falls through to the next rung.
 
 **What it is not.** It is not a testing tool, and it does not replace
 agent-browser for interactive work. Anything that clicks, types, logs in,

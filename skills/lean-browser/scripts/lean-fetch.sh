@@ -7,7 +7,7 @@
 # over.
 #
 #   ./scripts/lean-fetch.sh https://example.com
-#   ./scripts/lean-fetch.sh wiki article Eiffel Tower --budget 300
+#   ./scripts/lean-fetch.sh wiki article Eiffel Tower --budget 2000
 #   ./scripts/lean-fetch.sh --check
 #
 set -euo pipefail

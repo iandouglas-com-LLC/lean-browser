@@ -34,7 +34,7 @@ const TOOLS = [
         url: { type: "string", description: "Absolute URL to read." },
         budget: {
           type: "integer",
-          description: "Render target in tokens for the cheap rungs. Default 500. Raise it only when you must have a whole page.",
+          description: "Render target in tokens for the cheap rungs. Default 1000. Raise it only when you must have a whole page.",
         },
         find: {
           type: "string",
@@ -124,16 +124,12 @@ async function callTool(name, args) {
 
   if (name === "lean_search") {
     const engine = args.engine === "bing" ? "bing" : "ddg";
-    // A search page spends a lot of its budget on chrome above the results,
-    // so give it more room than a normal page. Bing needs the most.
-    const budget = engine === "bing" ? 1200 : 800;
-    const res = await runCli([
-      engine,
-      "search",
-      String(args.query ?? ""),
-      "--budget",
-      String(budget),
-    ]);
+    // A search page spends a lot of its budget on chrome above the results.
+    // DuckDuckGo fits the script's default, so only Bing asks for more room.
+    // The default itself lives in lean-fetch.mjs; do not duplicate it here.
+    const cliArgs = [engine, "search", String(args.query ?? "")];
+    if (engine === "bing") cliArgs.push("--budget", "1200");
+    const res = await runCli(cliArgs);
     if (res.code === 0) {
       return { text: res.stdout.trim() };
     }

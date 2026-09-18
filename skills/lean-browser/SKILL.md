@@ -86,8 +86,9 @@ string. If it is empty, escalate to rung 4.
 
 These keep a research task from quietly costing more than it needs to.
 
-- Default to `--budget 500`. Raise it to 1000 or 2000 only when you must have a
-  whole page, and only for one page at a time.
+- Default to `--budget 1000`, which covers an ordinary article and a page of
+  search results. Raise it to 2000 only when you must have a whole page, and only
+  for one page at a time.
 - Prefer `find <query>` and `read <n>` over `raw`. `raw` is about 10 times the
   cost of the first render.
 - Never re-open a URL you already have open. `oc do <n>` follows a link from the
@@ -134,7 +135,7 @@ oc do <n>           follow link [n], or read [n] when it is text
 Useful flags:
 
 ```
---budget <tokens>   target render size, default 500
+--budget <tokens>   target render size, default 1000
 --json              machine-stable output
 --session <name>    separate page state, for two sites at once
 --verbose           metrics on stderr, only when diagnosing
@@ -142,12 +143,12 @@ Useful flags:
 
 ## Searching
 
-A search page spends a lot of its budget on chrome above the results, so give it
-more room than an ordinary page:
+A search page spends a lot of its budget on chrome above the results. The default
+is enough for DuckDuckGo, but the fallback engine needs more room:
 
 ```
-oc ddg search "claude code cli" --budget 800     better results, the default choice
-oc ddg lite "claude code cli" --budget 800       lighter page, same ranking
+oc ddg search "claude code cli"                  the default choice
+oc ddg lite "claude code cli"                    lighter page, same ranking
 oc bing search "claude code cli" --budget 1200   the fallback, needs the most room
 ```
 

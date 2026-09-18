@@ -32,7 +32,7 @@ instead.
 ## Flags
 
 ```
---budget <tokens>   render target, default 500, 2000 for read
+--budget <tokens>   render target, default 1000, 2000 for read
 --json              machine-stable output of the distilled page
 --html              with raw, cleaned HTML instead of markdown
 --session <name>    separate page state, for two sites at once

@@ -18,7 +18,7 @@ from its source) and one that it cannot, so the ladder has to do both.
 ## Rung 1: Try The Cheap Read
 
 ```
-$ npx --yes @only-cli/oc@0.5.4 open https://crates.io/crates/serde --budget 500
+$ npx --yes @only-cli/oc@0.5.4 open https://crates.io/crates/serde --budget 1000
 # crates.io: Rust Package Registry
 actions: find <query> | read <n> | raw
 oc: no readable content at https://crates.io/crates/serde (no text on the whole
